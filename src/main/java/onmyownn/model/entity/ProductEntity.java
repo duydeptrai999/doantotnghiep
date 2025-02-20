@@ -10,14 +10,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import onmyownn.support.enums.StatusEnum;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "product_tbl")
 public class ProductEntity {
+
+    public static final int STATUS_USE = 1;
+    public static final int STATUS_NOT_USE = 0;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,7 +39,7 @@ public class ProductEntity {
 
     @ToString.Include
     @Column(nullable = false)
-    private Integer status = StatusEnum.USE.getValue();
+    private Integer status = STATUS_USE;
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)

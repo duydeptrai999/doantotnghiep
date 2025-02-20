@@ -4,7 +4,6 @@ import javax.annotation.Generated;
 import javax.persistence.metamodel.ListAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
-import onmyownn.support.enums.RoleEnum;
 
 @Generated(value = "org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor")
 @StaticMetamodel(AccountEntity.class)
@@ -13,7 +12,7 @@ public abstract class AccountEntity_ {
 	public static volatile SingularAttribute<AccountEntity, String> password;
 	public static volatile ListAttribute<AccountEntity, OrderEntity> customerOrders;
 	public static volatile SingularAttribute<AccountEntity, String> address;
-	public static volatile SingularAttribute<AccountEntity, RoleEnum> role;
+	public static volatile SingularAttribute<AccountEntity, String> role;
 	public static volatile ListAttribute<AccountEntity, CartEntity> carts;
 	public static volatile SingularAttribute<AccountEntity, String> phone;
 	public static volatile SingularAttribute<AccountEntity, String> name;

@@ -12,9 +12,6 @@ import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
 
-import onmyownn.support.enums.RoleEnum;
-import onmyownn.support.enums.StatusEnum;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -51,12 +48,11 @@ public class AccountEntity {
     @Column
     private String address;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private RoleEnum role;
+    private String role; // "ADMIN", "EMPLOYEE", "CUSTOMER" thay vì RoleEnum
 
     @Column(nullable = false)
-    private Integer status = StatusEnum.USE.getValue();
+    private Integer status = 1; // 1: Hoạt động, 0: Không hoạt động
 
     // Khách hàng có thể có nhiều đơn hàng
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -69,4 +65,13 @@ public class AccountEntity {
     // Một tài khoản có thể có nhiều giỏ hàng
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartEntity> carts = new ArrayList<>();
+
+    // Constants for role values
+    public static final String ROLE_ADMIN = "ADMIN";
+    public static final String ROLE_EMPLOYEE = "EMPLOYEE";
+    public static final String ROLE_CUSTOMER = "CUSTOMER";
+
+    // Constants for status values
+    public static final Integer STATUS_ACTIVE = 1;
+    public static final Integer STATUS_INACTIVE = 0;
 }

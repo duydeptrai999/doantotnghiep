@@ -1,0 +1,25 @@
+# Ignore tất cả các thư mục và file do Maven tạo ra
+target/
+*.iml
+.mvn/
+pom.xml
+dependency-reduced-pom.xml
+*.log
+
+# Ignore thư mục cấu hình của IntelliJ IDEA
+.idea/
+.idea/**
+
+# Ignore thư mục thư viện của IntelliJ
+.idea/libraries/
+
+# Bỏ qua tất cả thư mục và file của IntelliJ IDEA
+.idea/
+.idea/**
+
+# Bỏ qua các file thư viện trong IntelliJ
+.idea/libraries/
+.idea/libraries/
+
+# Bỏ qua thư mục target (của Maven)
+target/

@@ -5,7 +5,6 @@ import onmyownn.repository.CartRepository;
 import onmyownn.service.CartService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
 
 @Service
 @Transactional
@@ -18,8 +17,8 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public List<CartEntity> findAll() {
-        return cartRepository.findAll();
+    public CartEntity findByAccountId(Long accountId) {
+        return cartRepository.findByAccountId(accountId).orElse(null);
     }
 
     @Override
@@ -28,7 +27,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void deleteById(Long id) {
-        cartRepository.deleteById(id);
+    public void clearCart(Long cartId) {
+        cartRepository.deleteById(cartId);
     }
 }

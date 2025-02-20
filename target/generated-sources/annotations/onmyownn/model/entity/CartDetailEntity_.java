@@ -15,7 +15,7 @@ public abstract class CartDetailEntity_ {
 	public static volatile SingularAttribute<CartDetailEntity, Integer> status;
 
 	public static final String QUANTITY = "quantity";
-	public static final String PRODUCT_DETAIL = "productDetail";
+	public static final String PRODUCT_DETAIL = "productDetail.jsp";
 	public static final String ID = "id";
 	public static final String CART = "cart";
 	public static final String STATUS = "status";

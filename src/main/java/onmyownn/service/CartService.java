@@ -1,10 +1,9 @@
 package onmyownn.service;
 
 import onmyownn.model.entity.CartEntity;
-import java.util.List;
 
 public interface CartService {
-    List<CartEntity> findAll();
+    CartEntity findByAccountId(Long accountId);
     CartEntity save(CartEntity cart);
-    void deleteById(Long id);
+    void clearCart(Long cartId);
 }

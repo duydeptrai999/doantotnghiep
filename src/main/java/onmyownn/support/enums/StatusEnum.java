@@ -1,14 +1,23 @@
 package onmyownn.support.enums;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import java.util.Arrays;
+import java.util.List;
 
-@Getter
-@AllArgsConstructor
-public enum StatusEnum implements EnumBase<StatusEnum> {
-  USE("Sử dụng", 1),
-  NO_USE("Ngừng sử dụng", 2);
+public enum StatusEnum {
+  ACTIVE("Hoạt động"),
+  INACTIVE("Không hoạt động");
 
-  private String name;
-  private int value;
+  private String displayName;
+
+  StatusEnum(String displayName) {
+    this.displayName = displayName;
+  }
+
+  public String getDisplayName() {
+    return displayName;
+  }
+
+  public static List<StatusEnum> getAllStatuses() {
+    return Arrays.asList(StatusEnum.values());
+  }
 }

@@ -1,15 +1,14 @@
 package onmyownn.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.ArrayList;
-import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import onmyownn.support.enums.StatusEnum;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -31,9 +30,8 @@ public class SizeEntity {
     @Column
     private String description;
 
-    @ToString.Include
     @Column(nullable = false)
-    private Integer status = StatusEnum.USE.getValue();
+    private Integer status = 1; // 1: Hoạt động, 0: Không hoạt động
 
     @JsonIgnore
     @OneToMany(mappedBy = "size", cascade = CascadeType.ALL, orphanRemoval = true)

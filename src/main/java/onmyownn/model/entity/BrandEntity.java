@@ -9,7 +9,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import onmyownn.support.enums.StatusEnum;
 
 @Data
 @NoArgsConstructor
@@ -17,6 +16,9 @@ import onmyownn.support.enums.StatusEnum;
 @Entity
 @Table(name = "brand_tbl")
 public class BrandEntity {
+
+    public static final int STATUS_USE = 1;
+    public static final int STATUS_NOT_USE = 0;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +35,7 @@ public class BrandEntity {
 
     @ToString.Include
     @Column(nullable = false)
-    private Integer status = StatusEnum.USE.getValue();
+    private Integer status = STATUS_USE;
 
     @JsonIgnore
     @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -10,6 +10,7 @@ import java.util.List;
 @Service
 @Transactional
 public class CartDetailServiceImpl implements CartDetailService {
+
     private final CartDetailRepository cartDetailRepository;
 
     public CartDetailServiceImpl(CartDetailRepository cartDetailRepository) {
@@ -17,8 +18,8 @@ public class CartDetailServiceImpl implements CartDetailService {
     }
 
     @Override
-    public List<CartDetailEntity> findAll() {
-        return cartDetailRepository.findAll();
+    public List<CartDetailEntity> findByCartId(Long cartId) {
+        return cartDetailRepository.findByCartId(cartId);
     }
 
     @Override
@@ -29,5 +30,10 @@ public class CartDetailServiceImpl implements CartDetailService {
     @Override
     public void deleteById(Long id) {
         cartDetailRepository.deleteById(id);
+    }
+
+    @Override
+    public void deleteByCartId(Long cartId) {
+        cartDetailRepository.deleteByCartId(cartId);
     }
 }

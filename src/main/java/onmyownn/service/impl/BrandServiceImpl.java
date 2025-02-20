@@ -6,6 +6,8 @@ import onmyownn.service.BrandService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Service
 @Transactional
@@ -23,6 +25,11 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
+    public Page<BrandEntity> findAll(Pageable pageable) {
+        return brandRepository.findAll(pageable); // Thêm dòng này
+    }
+
+    @Override
     public BrandEntity save(BrandEntity brand) {
         return brandRepository.save(brand);
     }
@@ -30,5 +37,15 @@ public class BrandServiceImpl implements BrandService {
     @Override
     public void deleteById(Long id) {
         brandRepository.deleteById(id);
+    }
+
+    @Override
+    public BrandEntity findById(Long id) {
+        return brandRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<BrandEntity> findAllActive() {
+        return brandRepository.findByStatus(1);
     }
 }
