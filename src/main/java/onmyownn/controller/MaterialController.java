@@ -18,13 +18,12 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/material")
 public class MaterialController {
 
     @Autowired
     private MaterialService materialService;
 
-    @GetMapping("/list")
+    @RequestMapping("/material/list")
     public String listMaterials(@RequestParam(name = "page", defaultValue = "0") Integer page, Model model) {
         Pageable pageable = PageRequest.of(page, 5);
         Page<MaterialEntity> materials = materialService.findAll(pageable);
@@ -32,14 +31,14 @@ public class MaterialController {
         return "material/list";
     }
 
-    @GetMapping("/add")
+    @RequestMapping("/material/add")
     public String showAddForm(Model model) {
         model.addAttribute("material", new MaterialEntity());
         model.addAttribute("statusList", getStatusList());
         return "material/add";
     }
 
-    @PostMapping("/add")
+    @RequestMapping("/material/save")
     public String addMaterial(@Valid @ModelAttribute("material") MaterialEntity material, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("statusList", getStatusList());
@@ -49,7 +48,7 @@ public class MaterialController {
         return "redirect:/material/list";
     }
 
-    @GetMapping("/edit/{id}")
+    @RequestMapping("/material/edit/{id}")
     public String showEditForm(@PathVariable("id") Long id, Model model) {
         MaterialEntity material = materialService.findById(id);
         if (material == null) {
@@ -60,7 +59,7 @@ public class MaterialController {
         return "material/edit";
     }
 
-    @PostMapping("/edit/{id}")
+    @RequestMapping("/material/update/{id}")
     public String editMaterial(@PathVariable("id") Long id, @Valid @ModelAttribute("material") MaterialEntity material,
                                BindingResult result, Model model) {
         if (result.hasErrors()) {
@@ -72,7 +71,7 @@ public class MaterialController {
         return "redirect:/material/list";
     }
 
-    @GetMapping("/delete/{id}")
+    @RequestMapping("/material/delete/{id}")
     public String deleteMaterial(@PathVariable("id") Long id) {
         materialService.deleteById(id);
         return "redirect:/material/list";

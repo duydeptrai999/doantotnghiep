@@ -8,6 +8,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -40,6 +42,9 @@ public class OrderEntity {
 
     @Column
     private String code;
+
+    @Column(name = "payment_transaction_no")
+    private String paymentTransactionNo;
 
     @Column(name = "confirmed_at")
     private LocalDateTime confirmedAt;
@@ -82,4 +87,7 @@ public class OrderEntity {
     @ManyToOne
     @JoinColumn(name = "voucher_id")
     private VoucherEntity voucher;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderDetailEntity> orderDetails = new ArrayList<>();
 }

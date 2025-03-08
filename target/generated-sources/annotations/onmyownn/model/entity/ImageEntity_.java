@@ -12,7 +12,7 @@ public abstract class ImageEntity_ {
 	public static volatile SingularAttribute<ImageEntity, Long> id;
 	public static volatile SingularAttribute<ImageEntity, String> source;
 
-	public static final String PRODUCT_DETAIL = "productDetail.jsp";
+	public static final String PRODUCT_DETAIL = "productDetail";
 	public static final String ID = "id";
 	public static final String SOURCE = "source";
 

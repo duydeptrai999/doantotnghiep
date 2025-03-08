@@ -18,13 +18,12 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/category")
 public class CategoryController {
 
     @Autowired
     private CategoryService categoryService;
 
-    @GetMapping("/list")
+    @RequestMapping("/category/list")
     public String listCategories(@RequestParam(name = "page", defaultValue = "0") Integer page, Model model) {
         Pageable pageable = PageRequest.of(page, 5);
         Page<CategoryEntity> categories = categoryService.findAll(pageable);
@@ -32,14 +31,14 @@ public class CategoryController {
         return "category/list";
     }
 
-    @GetMapping("/add")
+    @RequestMapping("/category/add")
     public String showAddForm(Model model) {
         model.addAttribute("category", new CategoryEntity());
         model.addAttribute("statusList", getStatusList());
         return "category/add";
     }
 
-    @PostMapping("/add")
+    @RequestMapping("/category/save")
     public String addCategory(@Valid @ModelAttribute("category") CategoryEntity category, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("statusList", getStatusList());
@@ -49,7 +48,7 @@ public class CategoryController {
         return "redirect:/category/list";
     }
 
-    @GetMapping("/edit/{id}")
+    @RequestMapping("/category/edit/{id}")
     public String showEditForm(@PathVariable("id") Long id, Model model) {
         CategoryEntity category = categoryService.findById(id);
         if (category == null) {
@@ -60,7 +59,7 @@ public class CategoryController {
         return "category/edit";
     }
 
-    @PostMapping("/edit/{id}")
+    @RequestMapping("/category/update/{id}")
     public String editCategory(@PathVariable("id") Long id, @Valid @ModelAttribute("category") CategoryEntity category,
                                BindingResult result, Model model) {
         if (result.hasErrors()) {
@@ -72,7 +71,7 @@ public class CategoryController {
         return "redirect:/category/list";
     }
 
-    @GetMapping("/delete/{id}")
+    @RequestMapping("/category/delete/{id}")
     public String deleteCategory(@PathVariable("id") Long id) {
         categoryService.deleteById(id);
         return "redirect:/category/list";

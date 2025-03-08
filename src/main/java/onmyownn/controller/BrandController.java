@@ -16,16 +16,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Controller
-@RequestMapping("/brand")
 public class BrandController {
 
     @Autowired
     private BrandService brandService;
 
-    @GetMapping("/list")
+    @RequestMapping("/brand/list")
     public String listBrands(@RequestParam(name = "page", defaultValue = "0") Integer page, Model model) {
         Pageable pageable = PageRequest.of(page, 5);
         Page<BrandEntity> brands = brandService.findAll(pageable);
@@ -33,14 +31,14 @@ public class BrandController {
         return "brand/list";  // Trả về trang danh sách thương hiệu
     }
 
-    @GetMapping("/add")
+    @RequestMapping("/brand/add")
     public String showAddForm(Model model) {
         model.addAttribute("brand", new BrandEntity());
         model.addAttribute("statusList", getStatusList());
         return "brand/add";  // Trả về trang thêm thương hiệu
     }
 
-    @PostMapping("/add")
+    @RequestMapping("/brand/save")
     public String addBrand(@Valid @ModelAttribute("brand") BrandEntity brand, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("statusList", getStatusList());
@@ -50,7 +48,7 @@ public class BrandController {
         return "redirect:/brand/list";
     }
 
-    @GetMapping("/edit/{id}")
+    @RequestMapping("/brand/edit/{id}")
     public String showEditForm(@PathVariable("id") Long id, Model model) {
         BrandEntity brand = brandService.findById(id);
         if (brand == null) {
@@ -61,7 +59,7 @@ public class BrandController {
         return "brand/edit";  // Trả về trang chỉnh sửa thương hiệu
     }
 
-    @PostMapping("/edit/{id}")
+    @RequestMapping("/brand/update/{id}")
     public String editBrand(@PathVariable("id") Long id, @Valid @ModelAttribute("brand") BrandEntity brand,
                             BindingResult result, Model model) {
         if (result.hasErrors()) {
@@ -73,7 +71,7 @@ public class BrandController {
         return "redirect:/brand/list";
     }
 
-    @GetMapping("/delete/{id}")
+    @RequestMapping("/brand/delete/{id}")
     public String deleteBrand(@PathVariable("id") Long id) {
         brandService.deleteById(id);
         return "redirect:/brand/list";

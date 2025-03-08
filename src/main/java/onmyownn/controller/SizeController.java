@@ -18,13 +18,12 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/size")
 public class SizeController {
 
     @Autowired
     private SizeService sizeService;
 
-    @GetMapping("/list")
+    @RequestMapping("/size/list")
     public String listSizes(@RequestParam(name = "page", defaultValue = "0") Integer page, Model model) {
         Pageable pageable = PageRequest.of(page, 5);
         Page<SizeEntity> sizes = sizeService.findAll(pageable);
@@ -32,14 +31,14 @@ public class SizeController {
         return "size/list";
     }
 
-    @GetMapping("/add")
+    @RequestMapping("/size/add")
     public String showAddForm(Model model) {
         model.addAttribute("size", new SizeEntity());
         model.addAttribute("statusList", getStatusList());
         return "size/add";
     }
 
-    @PostMapping("/add")
+    @RequestMapping("/size/save")
     public String addSize(@Valid @ModelAttribute("size") SizeEntity size, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("statusList", getStatusList());
@@ -49,7 +48,7 @@ public class SizeController {
         return "redirect:/size/list";
     }
 
-    @GetMapping("/edit/{id}")
+    @RequestMapping("/size/edit/{id}")
     public String showEditForm(@PathVariable("id") Long id, Model model) {
         SizeEntity size = sizeService.findById(id);
         if (size == null) {
@@ -60,7 +59,7 @@ public class SizeController {
         return "size/edit";
     }
 
-    @PostMapping("/edit/{id}")
+    @RequestMapping("/size/update/{id}")
     public String editSize(@PathVariable("id") Long id, @Valid @ModelAttribute("size") SizeEntity size,
                            BindingResult result, Model model) {
         if (result.hasErrors()) {
@@ -72,7 +71,7 @@ public class SizeController {
         return "redirect:/size/list";
     }
 
-    @GetMapping("/delete/{id}")
+    @RequestMapping("/size/delete/{id}")
     public String deleteSize(@PathVariable("id") Long id) {
         sizeService.deleteById(id);
         return "redirect:/size/list";

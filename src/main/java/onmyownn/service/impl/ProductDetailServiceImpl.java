@@ -1,5 +1,6 @@
 package onmyownn.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import onmyownn.model.entity.ProductDetailEntity;
 import onmyownn.repository.ProductDetailRepository;
 import onmyownn.service.ProductDetailService;
@@ -13,13 +14,10 @@ import java.util.Optional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class ProductDetailServiceImpl implements ProductDetailService {
 
     private final ProductDetailRepository productDetailRepository;
-
-    public ProductDetailServiceImpl(ProductDetailRepository productDetailRepository) {
-        this.productDetailRepository = productDetailRepository;
-    }
 
     // ✅ Lấy tất cả sản phẩm chi tiết (không phân trang)
     @Override
@@ -69,5 +67,16 @@ public class ProductDetailServiceImpl implements ProductDetailService {
             detail.setStatus(status);
             productDetailRepository.save(detail);
         });
+    }
+
+    // ✅ Tìm sản phẩm chi tiết theo sản phẩm, màu sắc và kích thước
+    @Override
+    public Optional<ProductDetailEntity> findByProductAndColorAndSize(Long productId, Long colorId, Long sizeId) {
+        return productDetailRepository.findByProductIdAndColorIdAndSizeId(productId, colorId, sizeId);
+    }
+
+    @Override
+    public List<ProductDetailEntity> findByProductId(Long productId) {
+        return productDetailRepository.findByProductId(productId);
     }
 }

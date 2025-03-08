@@ -25,4 +25,10 @@ public class CartEntity {
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartDetailEntity> cartDetails = new ArrayList<>();
+
+    public double getTotalAmount() {
+        return cartDetails.stream()
+                .mapToDouble(detail -> detail.getProductDetail().getPrice() * detail.getQuantity())
+                .sum();
+    }
 }

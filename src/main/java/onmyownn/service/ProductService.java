@@ -27,4 +27,7 @@ public interface ProductService {
 
     // Thay đổi trạng thái của sản phẩm (VD: Xóa mềm bằng cách đổi status)
     void changeStatus(Long id, int status);
+
+    // Xóa sản phẩm theo ID
+    void deleteById(Long id);
 }

@@ -29,33 +29,33 @@ public class ProductDetailEntity {
     private String productName;
 
     @NotNull
-    @Column(nullable = false)
+    @Column(name = "price", nullable = false)
     private Double price;
 
     @NotNull
-    @Column(nullable = false)
+    @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
     @ToString.Include
-    @Column(nullable = false)
+    @Column(name = "status", nullable = false)
     private Integer status = STATUS_USE;
 
-    @Column(unique = true)
+    @Column(name = "code")
     private String code;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "color_id", nullable = false)
     private ColorEntity color;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "size_id", nullable = false)
     private SizeEntity size;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     private ProductEntity product;
 
-    @OneToMany(mappedBy = "productDetail", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "productDetail", fetch = FetchType.LAZY)
     private List<ImageEntity> images = new ArrayList<>();
 
 }

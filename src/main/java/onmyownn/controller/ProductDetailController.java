@@ -1,29 +1,28 @@
 package onmyownn.controller;
 
+import lombok.RequiredArgsConstructor;
 import onmyownn.model.entity.ProductDetailEntity;
+import onmyownn.model.entity.ProductEntity;
 import onmyownn.service.ProductDetailService;
+import onmyownn.service.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/product-details")
+@RequiredArgsConstructor
 public class ProductDetailController {
 
     private final ProductDetailService productDetailService;
+    private final ProductService productService;
 
-    public ProductDetailController(ProductDetailService productDetailService) {
-        this.productDetailService = productDetailService;
-    }
-
-    // ✅ Hiển thị danh sách sản phẩm chi tiết (có phân trang)
-    @GetMapping
+    @GetMapping("/product-details")
     public String getAllProductDetailsPaged(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -31,7 +30,25 @@ public class ProductDetailController {
         Pageable pageable = PageRequest.of(page, size);
         Page<ProductDetailEntity> productDetails = productDetailService.findAll(pageable);
         model.addAttribute("productDetails", productDetails);
-        return "product-details/productDetailList"; // Trả về đúng đường dẫn JSP
+        return "product-details/list";
+    }
+
+    @GetMapping("/product/detail/{id}")
+    public String viewProductDetail(@PathVariable Long id, Model model) {
+        ProductEntity product = productService.findById(id);
+        if (product == null) {
+            return "redirect:/home?error=product_not_found";
+        }
+        model.addAttribute("product", product);
+        return "product/detail";
+    }
+
+    @GetMapping("/api/product-details/{productId}/{colorId}/{sizeId}")
+    @ResponseBody
+    public Optional<ProductDetailEntity> getProductDetail(@PathVariable Long productId,
+                                                          @PathVariable Long colorId,
+                                                          @PathVariable Long sizeId) {
+        return productDetailService.findByProductAndColorAndSize(productId, colorId, sizeId);
     }
 
     // ✅ Hiển thị chi tiết sản phẩm
@@ -75,5 +92,15 @@ public class ProductDetailController {
     public String activateProductDetail(@PathVariable Long id) {
         productDetailService.changeStatus(id, 1); // 1 là trạng thái hoạt động
         return "redirect:/product-details?success=activated";
+    }
+
+    @GetMapping
+    public ResponseEntity<?> findByProductAndColorAndSize(
+            @RequestParam Long productId,
+            @RequestParam Long colorId,
+            @RequestParam Long sizeId) {
+        return productDetailService.findByProductAndColorAndSize(productId, colorId, sizeId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }

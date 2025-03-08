@@ -1,25 +1,38 @@
 package onmyownn.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import onmyownn.model.entity.AccountEntity;
 import onmyownn.repository.AccountRepository;
 import onmyownn.service.AccountService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
 
-    public AccountServiceImpl(AccountRepository accountRepository) {
-        this.accountRepository = accountRepository;
+
+
+    @Override
+    public AccountEntity getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new RuntimeException("Người dùng chưa đăng nhập");
+        }
+        
+        String username = authentication.getName();
+        return findByUsername(username);
     }
 
     @Override
-    public List<AccountEntity> findAll() {
-        return accountRepository.findAll();
+    public AccountEntity getUser(Long userId) {
+        return findById(userId);
     }
 
     @Override
@@ -30,5 +43,17 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void deleteById(Long id) {
         accountRepository.deleteById(id);
+    }
+
+    @Override
+    public AccountEntity findById(Long id) {
+        return accountRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
+    }
+
+    @Override
+    public AccountEntity findByUsername(String username) {
+        return accountRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy thông tin người dùng"));
     }
 }

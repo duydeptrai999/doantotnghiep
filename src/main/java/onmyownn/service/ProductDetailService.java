@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductDetailService {
 
@@ -28,4 +29,9 @@ public interface ProductDetailService {
 
     // ✅ Xóa mềm sản phẩm chi tiết (đổi status)
     void changeStatus(Long id, int status);
+
+    // ✅ Tìm sản phẩm chi tiết theo sản phẩm, màu sắc và kích thước
+    Optional<ProductDetailEntity> findByProductAndColorAndSize(Long productId, Long colorId, Long sizeId);
+
+    List<ProductDetailEntity> findByProductId(Long productId);
 }

@@ -1,12 +1,15 @@
 package onmyownn.controller;
 
+import lombok.RequiredArgsConstructor;
 import onmyownn.model.entity.BrandEntity;
 import onmyownn.model.entity.CategoryEntity;
 import onmyownn.model.entity.MaterialEntity;
 import onmyownn.model.entity.ProductEntity;
+import onmyownn.model.entity.ProductDetailEntity;
 import onmyownn.service.BrandService;
 import onmyownn.service.CategoryService;
 import onmyownn.service.MaterialService;
+import onmyownn.service.ProductDetailService;
 import onmyownn.service.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,41 +20,47 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping("/products")
+@RequestMapping("/product")
+@RequiredArgsConstructor
 public class ProductController {
 
     private final ProductService productService;
     private final CategoryService categoryService;
     private final BrandService brandService;
     private final MaterialService materialService;
+    private final ProductDetailService productDetailService;
 
-    public ProductController(ProductService productService,
-                             CategoryService categoryService,
-                             BrandService brandService,
-                             MaterialService materialService) {
-        this.productService = productService;
-        this.categoryService = categoryService;
-        this.brandService = brandService;
-        this.materialService = materialService;
-    }
-
-    // Hiển thị danh sách sản phẩm (có phân trang)
-    @GetMapping
-    public String getAllProductsPaged(
+    @GetMapping("/list")
+    public String listProducts(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "12") int size,
             Model model) {
+        
+        // Lấy danh sách sản phẩm có phân trang
         Pageable pageable = PageRequest.of(page, size);
-        Page<ProductEntity> products = productService.findAll(pageable);
+        Page<ProductEntity> productPage = productService.findAll(pageable);
+        List<ProductEntity> products = new ArrayList<>(productPage.getContent());
+        
+        // Lấy chi tiết sản phẩm cho mỗi sản phẩm
+        for (ProductEntity product : products) {
+            List<ProductDetailEntity> details = productDetailService.findByProductId(product.getId());
+            product.setProductDetails(details);
+        }
+        
+        // Thêm dữ liệu vào model
         model.addAttribute("products", products);
-        return "product/list";  // Đổi từ productList.jsp → list.jsp
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", productPage.getTotalPages());
+        model.addAttribute("totalItems", productPage.getTotalElements());
+        
+        return "product/list";
     }
 
-    // Hiển thị danh sách sản phẩm đang bán
-    @GetMapping("/active")
+    @RequestMapping("/active")
     public String getActiveProductsPaged(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -63,84 +72,54 @@ public class ProductController {
         return "product/list";
     }
 
-    // Xem chi tiết sản phẩm
-    @GetMapping("/{id}")
-    public String getProductById(@PathVariable Long id, Model model) {
-        ProductEntity product = productService.findById(id);
-        if (product == null) {
-            return "redirect:/products";
-        }
-        model.addAttribute("product", product);
-        return "product/detail";
-    }
-
-    // Hiển thị form thêm mới sản phẩm
-    @GetMapping("/new")
-    public String showCreateForm(Model model) {
-        ProductEntity product = new ProductEntity();
-        model.addAttribute("product", product);
+    @RequestMapping("/add")
+    public String showAddForm(Model model) {
+        model.addAttribute("product", new ProductEntity());
         loadFormDependencies(model);
-        model.addAttribute("formTitle", "Thêm sản phẩm mới");
-        model.addAttribute("formAction", "/products/save");
-        return "product/form";
+        return "product/add";
     }
 
-    // Hiển thị form chỉnh sửa sản phẩm
-    @GetMapping("/edit/{id}")
+    @RequestMapping("/save")
+    public String addProduct(@Valid @ModelAttribute("product") ProductEntity product,
+                           BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            loadFormDependencies(model);
+            return "product/add";
+        }
+        productService.save(product);
+        return "redirect:/product/list";
+    }
+
+    @RequestMapping("/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model) {
         ProductEntity product = productService.findById(id);
         if (product == null) {
-            return "redirect:/products";
+            return "redirect:/product/list";
         }
         model.addAttribute("product", product);
         loadFormDependencies(model);
-        model.addAttribute("formTitle", "Chỉnh sửa sản phẩm");
-        model.addAttribute("formAction", "/products/save");
-        return "product/form";  // Đổi từ productForm.jsp → form.jsp
+        return "product/edit";
     }
 
-    // Lưu sản phẩm (thêm mới hoặc cập nhật)
-    @PostMapping("/save")
-    public String saveProduct(@Valid @ModelAttribute ProductEntity product,
-                              BindingResult bindingResult,
-                              Model model) {
-        if (bindingResult.hasErrors()) {
+    @RequestMapping("/update/{id}")
+    public String updateProduct(@PathVariable Long id,
+                              @Valid @ModelAttribute("product") ProductEntity product,
+                              BindingResult result, Model model) {
+        if (result.hasErrors()) {
             loadFormDependencies(model);
-            model.addAttribute("formTitle", product.getId() == null ? "Thêm sản phẩm mới" : "Chỉnh sửa sản phẩm");
-            model.addAttribute("formAction", "/products/save");
-            return "product/form";  // Đổi từ productForm.jsp → form.jsp
+            return "product/edit";
         }
-
+        product.setId(id);
         productService.save(product);
-        return "redirect:/products";
+        return "redirect:/product/list";
     }
 
-    // Xác nhận xóa sản phẩm (chuyển sang trang xác nhận)
-    @GetMapping("/delete/{id}/confirm")
-    public String confirmDelete(@PathVariable Long id, Model model) {
-        ProductEntity product = productService.findById(id);
-        if (product == null) {
-            return "redirect:/products";
-        }
-        model.addAttribute("product", product);
-        return "product/confirmDelete";  // Đổi từ confirmDelete.jsp → confirmDelete.jsp (giữ nguyên)
+    @RequestMapping("/delete/{id}")
+    public String deleteProduct(@PathVariable Long id) {
+        productService.deleteById(id);
+        return "redirect:/product/list";
     }
 
-    // Xóa mềm sản phẩm (đổi status)
-    @GetMapping("/delete/{id}")
-    public String changeProductStatus(@PathVariable Long id) {
-        productService.changeStatus(id, ProductEntity.STATUS_NOT_USE);
-        return "redirect:/products";
-    }
-
-    // Kích hoạt lại sản phẩm
-    @GetMapping("/activate/{id}")
-    public String activateProduct(@PathVariable Long id) {
-        productService.changeStatus(id, ProductEntity.STATUS_USE);
-        return "redirect:/products";
-    }
-
-    // Helper method để tải danh sách danh mục, thương hiệu, chất liệu cho form
     private void loadFormDependencies(Model model) {
         List<CategoryEntity> categories = categoryService.findAllActive();
         List<BrandEntity> brands = brandService.findAllActive();

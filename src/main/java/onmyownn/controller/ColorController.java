@@ -18,13 +18,12 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/color")
 public class ColorController {
 
     @Autowired
     private ColorService colorService;
 
-    @GetMapping("/list")
+    @RequestMapping("/color/list")
     public String listColors(@RequestParam(name = "page", defaultValue = "0") Integer page, Model model) {
         Pageable pageable = PageRequest.of(page, 5);
         Page<ColorEntity> colors = colorService.findAll(pageable);
@@ -32,14 +31,14 @@ public class ColorController {
         return "color/list";
     }
 
-    @GetMapping("/add")
+    @RequestMapping("/color/add")
     public String showAddForm(Model model) {
         model.addAttribute("color", new ColorEntity());
         model.addAttribute("statusList", getStatusList());
         return "color/add";
     }
 
-    @PostMapping("/add")
+    @RequestMapping("/color/save")
     public String addColor(@Valid @ModelAttribute("color") ColorEntity color, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("statusList", getStatusList());
@@ -49,7 +48,7 @@ public class ColorController {
         return "redirect:/color/list";
     }
 
-    @GetMapping("/edit/{id}")
+    @RequestMapping("/color/edit/{id}")
     public String showEditForm(@PathVariable("id") Long id, Model model) {
         ColorEntity color = colorService.findById(id);
         if (color == null) {
@@ -60,7 +59,7 @@ public class ColorController {
         return "color/edit";
     }
 
-    @PostMapping("/edit/{id}")
+    @RequestMapping("/color/update/{id}")
     public String editColor(@PathVariable("id") Long id, @Valid @ModelAttribute("color") ColorEntity color,
                             BindingResult result, Model model) {
         if (result.hasErrors()) {
@@ -72,7 +71,7 @@ public class ColorController {
         return "redirect:/color/list";
     }
 
-    @GetMapping("/delete/{id}")
+    @RequestMapping("/color/delete/{id}")
     public String deleteColor(@PathVariable("id") Long id) {
         colorService.deleteById(id);
         return "redirect:/color/list";

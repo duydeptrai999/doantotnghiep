@@ -18,7 +18,7 @@ public abstract class OrderDetailEntity_ {
 
 	public static final String QUANTITY = "quantity";
 	public static final String CODE = "code";
-	public static final String PRODUCT_DETAIL = "productDetail.jsp";
+	public static final String PRODUCT_DETAIL = "productDetail";
 	public static final String PRICE = "price";
 	public static final String ID = "id";
 	public static final String STATUS = "status";

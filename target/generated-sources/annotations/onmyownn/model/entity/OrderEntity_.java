@@ -2,6 +2,7 @@ package onmyownn.model.entity;
 
 import java.time.LocalDateTime;
 import javax.annotation.Generated;
+import javax.persistence.metamodel.ListAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
@@ -16,8 +17,10 @@ public abstract class OrderEntity_ {
 	public static volatile SingularAttribute<OrderEntity, VoucherEntity> voucher;
 	public static volatile SingularAttribute<OrderEntity, AccountEntity> employee;
 	public static volatile SingularAttribute<OrderEntity, Integer> paymentType;
+	public static volatile ListAttribute<OrderEntity, OrderDetailEntity> orderDetails;
 	public static volatile SingularAttribute<OrderEntity, Integer> totalPayment;
 	public static volatile SingularAttribute<OrderEntity, String> phone;
+	public static volatile SingularAttribute<OrderEntity, String> paymentTransactionNo;
 	public static volatile SingularAttribute<OrderEntity, String> name;
 	public static volatile SingularAttribute<OrderEntity, Double> totalDiscount;
 	public static volatile SingularAttribute<OrderEntity, Long> id;
@@ -34,8 +37,10 @@ public abstract class OrderEntity_ {
 	public static final String VOUCHER = "voucher";
 	public static final String EMPLOYEE = "employee";
 	public static final String PAYMENT_TYPE = "paymentType";
+	public static final String ORDER_DETAILS = "orderDetails";
 	public static final String TOTAL_PAYMENT = "totalPayment";
 	public static final String PHONE = "phone";
+	public static final String PAYMENT_TRANSACTION_NO = "paymentTransactionNo";
 	public static final String NAME = "name";
 	public static final String TOTAL_DISCOUNT = "totalDiscount";
 	public static final String ID = "id";

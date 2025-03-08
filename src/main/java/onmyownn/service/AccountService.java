@@ -1,10 +1,12 @@
 package onmyownn.service;
 
 import onmyownn.model.entity.AccountEntity;
-import java.util.List;
 
 public interface AccountService {
-    List<AccountEntity> findAll();
+    AccountEntity getCurrentUser();
+    AccountEntity getUser(Long userId);
     AccountEntity save(AccountEntity account);
     void deleteById(Long id);
+    AccountEntity findById(Long id);
+    AccountEntity findByUsername(String username);
 }

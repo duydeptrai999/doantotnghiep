@@ -19,8 +19,13 @@ public class ImageEntity {
     private Long id;
 
     @NotBlank
-    @Column(nullable = false)
+    @Column(name = "source", nullable = false)
     private String source;
+
+    @Transient
+    public String getUrl() {
+        return this.source;
+    }
 
     @ManyToOne
     @JoinColumn(name = "product_detail_id", nullable = false)
